@@ -1,0 +1,125 @@
+version: "3.7"
+services:
+  redis7.4:
+    image: redis:latest
+    ports:
+      - 7400:6379
+    container_name: redis7.4
+    networks:
+      - php7.4
+
+  app-resha:
+    build:
+      args:
+        user: zaynd
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: php7.4
+    container_name: app-resha
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./siposi-apps:/var/www
+    networks:
+      - php7.4
+  
+  nginx-resha:
+    image: nginx:alpine
+    container_name: nginx-resha
+    restart: unless-stopped
+    ports:
+      - 7470:80
+    volumes:
+      - ./siposi-apps:/var/www
+      - ./config/nginx-resha:/etc/nginx/conf.d/
+    networks:
+      - php7.4
+
+  app-windi:
+    build:
+      args:
+        user: zaynd
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: php7.4
+    container_name: app-windi
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./siposi-apps-v10.1:/var/www
+    networks:
+      - php7.4
+
+  nginx-windi:
+    image: nginx:alpine
+    container_name: nginx-windi
+    restart: unless-stopped
+    ports:
+      - 7471:80
+    volumes:
+      - ./siposi-apps-v10.1:/var/www
+      - ./config/nginx-windi:/etc/nginx/conf.d/
+    networks:
+      - php7.4
+
+  app-ticket:
+    build:
+      args:
+        user: zaynd
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: php7.4
+    container_name: app-ticket
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./ticket:/var/www
+    networks:
+      - php7.4
+
+  nginx-ticket:
+    image: nginx:alpine
+    container_name: nginx-ticket
+    restart: unless-stopped
+    ports:
+      - 7472:80
+    volumes:
+      - ./ticket:/var/www
+      - ./config/nginx-ticket:/etc/nginx/conf.d/
+    networks:
+      - php7.4
+
+  app-cms:
+    build:
+      args:
+        user: zaynd
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: php7.4
+    container_name: app-cms
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./cms-api:/var/www
+    networks:
+      - php7.4
+
+  nginx-cms:
+    image: nginx:alpine
+    container_name: nginx-cms
+    restart: unless-stopped
+    ports:
+      - 7473:80
+    volumes:
+      - ./cms-api:/var/www
+      - ./config/nginx-cms:/etc/nginx/conf.d/
+    networks:
+      - php7.4
+
+networks:
+  php7.4:
+    driver: bridge
