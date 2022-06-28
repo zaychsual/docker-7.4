@@ -23,7 +23,7 @@ services:
       - ./siposi-apps:/var/www
     networks:
       - php7.4
-  
+
   nginx-resha:
     image: nginx:alpine
     container_name: nginx-resha
@@ -117,6 +117,34 @@ services:
     volumes:
       - ./cms-api:/var/www
       - ./config/nginx-cms:/etc/nginx/conf.d/
+    networks:
+      - php7.4
+
+  jws-ecomm:
+    build:
+      args:
+        user: zaynd
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: php7.4
+    container_name: jws-ecomm
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./jws-ecommerce:/var/www
+    networks:
+      - php7.4
+
+  nginx-ecomm:
+    image: nginx:alpine
+    container_name: nginx-ecomm
+    restart: unless-stopped
+    ports:
+      - 7474:80
+    volumes:
+      - ./jws-ecommerce:/var/www
+      - ./config/nginx-ecomm:/etc/nginx/conf.d/
     networks:
       - php7.4
 
