@@ -92,7 +92,7 @@ services:
     networks:
       - php7.4
 
-  app-cms:
+  app-test:
     build:
       args:
         user: zaynd
@@ -100,23 +100,23 @@ services:
       context: ./
       dockerfile: Dockerfile
     image: php7.4
-    container_name: app-cms
+    container_name: app-test
     restart: unless-stopped
     working_dir: /var/www/
     volumes:
-      - ./cms-api:/var/www
+      - ./test-kledo:/var/www
     networks:
       - php7.4
 
-  nginx-cms:
+  nginx-test:
     image: nginx:alpine
     container_name: nginx-cms
     restart: unless-stopped
     ports:
       - 7473:80
     volumes:
-      - ./cms-api:/var/www
-      - ./config/nginx-cms:/etc/nginx/conf.d/
+      - ./test-kledo:/var/www
+      - ./config/nginx-test:/etc/nginx/conf.d/
     networks:
       - php7.4
 
